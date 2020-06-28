@@ -41,26 +41,61 @@ namespace DataImporter
         private bool DoCFGImport(string src_file, string dest_path)
         {
             StreamReader src_sr = new StreamReader(File.OpenRead(src_file));
-            
-            string src_line = src_sr.ReadLine();
-            while (src_line  != null && !src_line.StartsWith("[Gamevars]"))
-                src_line = src_sr.ReadLine();
 
-            if (src_line != null)
+            string dst_file = Path.Combine(dest_path, "amctc.cfg");
+            StreamWriter dst_sr = new StreamWriter(File.Create(dst_file));
+
+            bool made_changes = false;
+            string src_line = src_sr.ReadLine();
+
+            while (src_line != null)
             {
-                string dst_file = Path.Combine(dest_path, @"amctc.cfg"); 
-                StreamWriter dst_sr = new StreamWriter(File.Create(dst_file));
-                dst_sr.WriteLine("[Gamevars]");
-                while (!string.IsNullOrEmpty(src_line = src_sr.ReadLine()))
+                while (src_line != null && !src_line.StartsWith("[Gamevars]") && !src_line.StartsWith("[Controls]"))
+                    src_line = src_sr.ReadLine();
+
+                if (src_line != null)
+                {
                     dst_sr.WriteLine(src_line);
-                
-                dst_sr.Close();
-                src_sr.Close();
-                return true;
+
+                    src_line = src_sr.ReadLine();
+                    while (!string.IsNullOrEmpty(src_line) && !string.IsNullOrWhiteSpace(src_line) && !src_line.StartsWith("["))
+                    {
+                        dst_sr.WriteLine(src_line);
+                        src_line = src_sr.ReadLine();
+                    }
+                    dst_sr.WriteLine();
+                    made_changes = true;
+                }
+
+            }
+            dst_sr.Close();
+            src_sr.Close();
+            return made_changes;
+        }
+
+
+        private bool DoSettingsImport(string src_file, string dest_path)
+        {
+            StreamReader src_sr = new StreamReader(File.OpenRead(src_file));
+
+            string dst_file = Path.Combine(dest_path, "settings.cfg");
+            StreamWriter dst_sr = new StreamWriter(File.Create(dst_file));
+
+            bool made_changes = false;
+            string src_line = src_sr.ReadLine();
+            while (src_line != null)
+            {
+                if (src_line.StartsWith("//") || src_line.StartsWith("bind") || src_line.StartsWith("unbound") || src_line.StartsWith("unbindall"))
+                {
+                    dst_sr.WriteLine(src_line);
+                }
+                src_line = src_sr.ReadLine();
+                made_changes = true;
             }
 
+            dst_sr.Close();
             src_sr.Close();
-            return false;
+            return made_changes;
         }
 
         private void ImportButton_Click(object sender, EventArgs e)
@@ -69,11 +104,17 @@ namespace DataImporter
             string srcpath = srcBox.Text;
             string destpath = destBox.Text;
 
+            if (string.IsNullOrEmpty(srcpath) || string.IsNullOrEmpty(destpath))
+            {
+                MessageBox.Show("Error: Must select both source and destination path!", "Error: Empty Selection", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             try 
             {
                 if (!Directory.Exists(destpath))
                 {
-                    MessageBox.Show("Invalid Directory: " + destpath, "Invalid Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error: Invalid Directory: " + destpath, "Invalid Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -103,20 +144,36 @@ namespace DataImporter
                             made_changes |= true;
                         }
 
+
                         // Copy CFG gamevars over
-                        if (File.Exists(Path.Combine(srcpath, "amctc.cfg")))
+                        string amctc_cfg_path = Path.Combine(srcpath, "amctc.cfg");
+                        string eduke_cfg_path = Path.Combine(srcpath, "eduke32.cfg");
+                        int result = 0;
+
+                        if (File.Exists(amctc_cfg_path) && File.Exists(eduke_cfg_path))
                         {
-                            made_changes |= this.DoCFGImport(Path.Combine(srcpath,"amctc.cfg"), destpath);
+                            result = DateTime.Compare(File.GetLastWriteTime(amctc_cfg_path), File.GetLastWriteTime(eduke_cfg_path));
+                        }
+
+                        if (File.Exists(amctc_cfg_path) && result >= 0)
+                        {
+                            made_changes |= this.DoCFGImport(amctc_cfg_path, destpath);
                         } 
-                        else if (File.Exists(Path.Combine(srcpath, "eduke32.cfg")))
+                        else if (File.Exists(eduke_cfg_path) && result <= 0)
                         {
-                            made_changes |= this.DoCFGImport(Path.Combine(srcpath, "eduke32.cfg"), destpath);
+                            made_changes |= this.DoCFGImport(eduke_cfg_path, destpath);
+                        }
+
+                        // Copy keyboard binds
+                        if (File.Exists(Path.Combine(srcpath, "settings.cfg")))
+                        {
+                            made_changes |= this.DoSettingsImport(Path.Combine(srcpath, "settings.cfg"), destpath);
                         }
 
                         if (made_changes)
                             MessageBox.Show("Import Successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         else
-                            MessageBox.Show("Did not find any data to import!", "No Data Imported", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("Warning: Did not find any data to import!", "No Data Imported", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else
                     {
@@ -130,11 +187,11 @@ namespace DataImporter
             } 
             catch(DirectoryNotFoundException d)
             {
-                MessageBox.Show("Invalid Directory: " + d.Message, "Invalid Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: Invalid Directory: " + d.Message, "Invalid Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (ArgumentException a)
             {
-                MessageBox.Show("Invalid path: " + a.Message, "Invalid Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: Invalid path: " + a.Message, "Invalid Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

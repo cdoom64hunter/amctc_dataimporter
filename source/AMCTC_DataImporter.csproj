@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>appicon.ico</ApplicationIcon>
+    <ApplicationIcon>appicon_new.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>DataImporter.Program</StartupObject>
@@ -101,7 +101,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="appicon.ico" />
+    <Content Include="appicon_new.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
