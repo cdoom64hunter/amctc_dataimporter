@@ -1,4 +1,4 @@
-# AMC TC
+# AMC TC Data Importer
 Small GUI program to import data from previous versions of the AMC TC.
 
 Should be mostly self-explanatory.
