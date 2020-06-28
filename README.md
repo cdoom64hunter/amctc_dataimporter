@@ -1,7 +1,7 @@
 # AMC TC Data Importer
 Small GUI program to import data from previous versions of the AMC TC.
 
-Should be mostly self-explanatory.
+This tool allows you to import data and control config from older versions of the AMC TC into 3.5 and above.
 
 ## License
 
