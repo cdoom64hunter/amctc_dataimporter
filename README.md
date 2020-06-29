@@ -3,6 +3,8 @@ Small GUI program to import data from previous versions of the AMC TC.
 
 This tool allows you to import data and control config from older versions of the AMC TC into 3.5 and above.
 
+The logo/icon art was created by AliCatGamer.
+
 ## License
 
 This software is licensed under the BSD 3 clause license:
