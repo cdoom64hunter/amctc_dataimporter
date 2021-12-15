@@ -16,6 +16,7 @@ namespace DataImporter
         public AMCImportForm()
         {
             InitializeComponent();
+            destBox.Text = AppDomain.CurrentDomain.BaseDirectory;
         }
 
         private void CancelButton_click(object sender, EventArgs e)
@@ -50,7 +51,8 @@ namespace DataImporter
 
             while (src_line != null)
             {
-                while (src_line != null && !src_line.StartsWith("[Gamevars]") && !src_line.StartsWith("[Controls]"))
+                // commented out the [Controls] block because mouse settings don't port over well
+                while (src_line != null && !src_line.StartsWith("[Gamevars]")) // && !src_line.StartsWith("[Controls]"))
                     src_line = src_sr.ReadLine();
 
                 if (src_line != null)
