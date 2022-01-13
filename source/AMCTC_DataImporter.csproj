@@ -7,7 +7,7 @@
     <ProjectGuid>{A4A80D5B-0539-4CC2-A85C-72DC18FBBC8E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>DataImporter</RootNamespace>
-    <AssemblyName>AMC TC Progress Import Tool</AssemblyName>
+    <AssemblyName>AMC Squad Progress Import Tool</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

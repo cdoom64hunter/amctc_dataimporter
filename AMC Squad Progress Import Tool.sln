@@ -9,6 +9,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Description = An easy-to-use tool for transferring the progress from an older installation folder of the AMC Squad/AMC TC to the newly installed version.
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A4A80D5B-0539-4CC2-A85C-72DC18FBBC8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
