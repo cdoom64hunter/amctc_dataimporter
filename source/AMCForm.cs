@@ -28,16 +28,18 @@ namespace DataImporter
         {
             folderDialog.SelectedPath = this.srcBox.Text;
             folderDialog.Description = "Select the old AMC Squad or AMC TC installation directory.";
-            folderDialog.ShowDialog();
-            this.srcBox.Text = folderDialog.SelectedPath;
+            DialogResult r = folderDialog.ShowDialog();
+            if (r == DialogResult.OK)
+                this.srcBox.Text = folderDialog.SelectedPath;
         }
 
         private void DestButton_click(object sender, EventArgs e)
         {
             folderDialog.SelectedPath = this.destBox.Text;
             folderDialog.Description = "Select the new AMC Squad installation directory."; 
-            folderDialog.ShowDialog();
-            this.destBox.Text = folderDialog.SelectedPath;
+            DialogResult r = folderDialog.ShowDialog();
+            if (r == DialogResult.OK)
+                this.destBox.Text = folderDialog.SelectedPath;
         }
 
         private bool isAMCDir(string path)
