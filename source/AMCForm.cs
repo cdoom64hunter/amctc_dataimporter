@@ -44,7 +44,7 @@ namespace DataImporter
 
         private bool isAMCDir(string path)
         {
-            return File.Exists(Path.Combine(path, "AMCTC.grp")) || File.Exists(Path.Combine(path, "AMCSQUAD.grp"));
+            return File.Exists(Path.Combine(path, "AMCTC.grp")) || File.Exists(Path.Combine(path, "AMCSQUAD.grp")) || File.Exists(Path.Combine(path, "AMCSQUAD.GRP"));
         }
 
         private bool checkImportErrors(string srcpath, string dstpath)
@@ -85,7 +85,7 @@ namespace DataImporter
         private bool DoCFGImport(string src_file, string dest_path)
         {
             bool made_changes = false;
-            string dst_file = Path.Combine(dest_path, "amctc.cfg");
+            string dst_file = Path.Combine(dest_path, "amcsquad.cfg");
             StreamReader src_sr = new StreamReader(File.OpenRead(src_file));
             StreamWriter dst_sr = new StreamWriter(File.Create(dst_file));
 
@@ -175,21 +175,32 @@ namespace DataImporter
                 }
 
                 // Copy CFG gamevars over
+                string amcsquad_cfg_path = Path.Combine(srcpath, "amcsquad.cfg");
                 string amctc_cfg_path = Path.Combine(srcpath, "amctc.cfg");
                 string eduke_cfg_path = Path.Combine(srcpath, "eduke32.cfg");
-                int lastWrite = 0;
+                DateTime amcsquad_lastWrite = DateTime.MinValue;
+                DateTime amctc_lastWrite = DateTime.MinValue;
+                DateTime eduke_lastWrite = DateTime.MinValue;
 
-                if (File.Exists(amctc_cfg_path) && File.Exists(eduke_cfg_path))
+                if (File.Exists(amcsquad_cfg_path)) amcsquad_lastWrite = File.GetLastWriteTime(amcsquad_cfg_path);
+                if (File.Exists(amctc_cfg_path)) amctc_lastWrite = File.GetLastWriteTime(amctc_cfg_path);
+                if (File.Exists(eduke_cfg_path)) eduke_lastWrite = File.GetLastWriteTime(eduke_cfg_path);
+
+                int squad_vs_tc_time = DateTime.Compare(amcsquad_lastWrite, amctc_lastWrite);
+                int squad_vs_eduke_time = DateTime.Compare(amcsquad_lastWrite, eduke_lastWrite);
+                int tc_vs_eduke_time = DateTime.Compare(amctc_lastWrite, eduke_lastWrite);
+
+                if (File.Exists(amcsquad_cfg_path) && squad_vs_tc_time >= 0 && squad_vs_eduke_time >= 0)
                 {
-                    lastWrite = DateTime.Compare(File.GetLastWriteTime(amctc_cfg_path), File.GetLastWriteTime(eduke_cfg_path));
-                }
-
-                if (File.Exists(amctc_cfg_path) && lastWrite >= 0)
+                    this.DoCFGImport(amcsquad_cfg_path, dstpath);
+                    changeNotes += "Copied data from \"amcsquad.cfg\".\n";
+                } 
+                else if (File.Exists(amctc_cfg_path) && squad_vs_tc_time <= 0 && tc_vs_eduke_time >= 0)
                 {
                     this.DoCFGImport(amctc_cfg_path, dstpath);
                     changeNotes += "Copied data from \"amctc.cfg\".\n";
-                } 
-                else if (File.Exists(eduke_cfg_path) && lastWrite <= 0)
+                }
+                else if (File.Exists(eduke_cfg_path) && squad_vs_eduke_time <= 0 && tc_vs_eduke_time <= 0)
                 {
                     this.DoCFGImport(eduke_cfg_path, dstpath);
                     changeNotes += "Copied data from \"eduke32.cfg\".\n";
