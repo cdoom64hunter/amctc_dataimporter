@@ -1,7 +1,7 @@
 # Data Importer for The AMC Squad
-Small GUI program to import data from previous versions of The AMC Squad / AMC TC.
+Small GUI program to import data from previous versions of AMC Squad.
 
-This tool allows you to import data and control config from older versions of the AMC Squad/AMC TC into 3.5 and above.
+This tool allows you to import data and control config from older versions of the AMC Squad.
 
 The logo/icon art was created by AliCatGamer.
 
@@ -9,7 +9,7 @@ The logo/icon art was created by AliCatGamer.
 
 This software is licensed under the BSD 3 clause license:
 
-Copyright 2020 Dino Bollinger
+Copyright 2020-2024 Dino Bollinger
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

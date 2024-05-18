@@ -173,7 +173,7 @@
             this.MinimumSize = new System.Drawing.Size(520, 210);
             this.Name = "AMCImportForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AMC Progress Import Tool (Episode 4)";
+            this.Text = "AMC Progress Import Tool (4.5)";
             this.ResumeLayout(false);
             this.PerformLayout();
 

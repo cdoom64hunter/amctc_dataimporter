@@ -27,7 +27,7 @@ namespace DataImporter
         private void SrcButton_click(object sender, EventArgs e)
         {
             folderDialog.SelectedPath = this.srcBox.Text;
-            folderDialog.Description = "Select the old AMC Squad or AMC TC installation directory.";
+            folderDialog.Description = "Select the old AMC Squad installation directory.";
             DialogResult r = folderDialog.ShowDialog();
             if (r == DialogResult.OK)
                 this.srcBox.Text = folderDialog.SelectedPath;
@@ -71,12 +71,12 @@ namespace DataImporter
             }
             else if (!isAMCDir(srcpath))
             {
-                MessageBox.Show("Error: Source folder is not a valid AMC TC/AMC Squad directory!", "Error: Invalid Source", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: Source folder is not a valid AMC Squad directory!", "Error: Invalid Source", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return true;
             }
             else if (!isAMCDir(dstpath))
             {
-                MessageBox.Show("Error: Destination folder is not a valid AMC TC/AMC Squad directory!", "Error: Invalid Destination", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: Destination folder is not a valid AMC Squad directory!", "Error: Invalid Destination", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return true;
             }
             return false;
@@ -92,9 +92,9 @@ namespace DataImporter
             string src_line = src_sr.ReadLine();
             while (src_line != null)
             {
-                // commented out the [Controls] block because mouse settings don't port over well
-                while (src_line != null && !src_line.StartsWith("[Gamevars]")) // && !src_line.StartsWith("[Controls]"))
-                    src_line = src_sr.ReadLine();
+                // 4.5+: Commented out because we'll copy all the data now.
+                // while (src_line != null && !src_line.StartsWith("[Gamevars]") && !src_line.StartsWith("[Controls]"))
+                //     src_line = src_sr.ReadLine();
 
                 if (src_line != null)
                 {
@@ -127,7 +127,8 @@ namespace DataImporter
             string src_line = src_sr.ReadLine();
             while (src_line != null)
             {
-                if (src_line.StartsWith("//") || src_line.StartsWith("bind") || src_line.StartsWith("unbound") || src_line.StartsWith("unbindall"))
+                // 4.5+: Commented out because we'll copy all the data now.
+                // if (src_line.StartsWith("//") || src_line.StartsWith("bind") || src_line.StartsWith("unbound") || src_line.StartsWith("unbindall"))
                 {
                     dst_sr.WriteLine(src_line);
                 }
@@ -159,7 +160,7 @@ namespace DataImporter
 
                 // Attempt to copy DATA contents over
                 string src_datafolder = Path.Combine(srcpath, "DATA");
-                string dst_datafolder = Path.Combine(dstpath,"DATA");
+                string dst_datafolder = Path.Combine(dstpath, "DATA");
                 if (Directory.Exists(src_datafolder))
                 {
                     if (!Directory.Exists(dst_datafolder))
